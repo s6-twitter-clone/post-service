@@ -1,0 +1,86 @@
+# deployment
+#
+# set up a deployment for the post API.
+# for the prototype we can pull the image from the local image registry
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: post-service
+spec:
+ selector:
+  matchLabels:
+   app: post-service
+ replicas: 1
+ template:
+  metadata:
+   labels:
+    app: post-service
+  spec:
+   containers:
+    - name: post-service
+      image: localhost:5000/post-service:latest
+
+
+---
+# service
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: post-service
+spec:
+ selector:
+  app: post-service
+ ports:
+  - port: 80 # Default port for image
+    targetPort: 80 # Default port for image
+
+---
+# replacePathRegex middleware
+#
+# strips the first part of the request path and rewrites it to match the backend URL
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: post-service-path-middleware
+spec:
+  replacePathRegex:
+    regex: ^/api/post
+    replacement: /post
+
+---
+# custom header middleware
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: post-service-header-middleware
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-For: "/api/post"
+
+---
+# ingress
+#
+# Sets up an ingress to route traffic to the post service
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: post-service
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-post-service-path-middleware@kubernetescrd, default-post-service-header-middleware@kubernetescrd
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /api/post
+          pathType: Prefix
+          backend:
+            service:
+              name: post-service
+              port:
+                number: 80
