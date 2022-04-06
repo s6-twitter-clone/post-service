@@ -9,19 +9,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-test}
       POSTGRES_DB: "post"
 
-  pgadmin:
-    depends_on:
-      - postgres
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_USERNAME:-admin@admin.nl}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-      PGADMIN_SERVER_JSON_FILE: /tmp/servers.json
-    ports:
-      - "5050:80"
-    volumes:
-      - "./servers.json:/tmp/servers.json"
-
   api:
     depends_on:
       - postgres
