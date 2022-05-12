@@ -1,21 +1,26 @@
 version: '3.9'
 services:
-  postgres:
+  post-database:
     image: postgres:14.2
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-test}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-test}
       POSTGRES_DB: "post"
 
-  api:
+  post-service:
     depends_on:
-      - postgres
+      - post-database
     build:
       context: .
       dockerfile: post-service/Dockerfile
     ports:
-      - "80:80"
+      - "8080:80"
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
+      ENABLE_SWAGGER: true
+
+networks:
+  default:
+    name: twiddit
