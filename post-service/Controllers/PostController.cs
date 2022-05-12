@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using post_service.Dtos;
 using post_service.Services;
 using post_service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace post_service.Controllers;
 
 [ApiController]
-[Route("[controller]s")]
+[Route("")]
 public class PostController : ControllerBase
 {
     private readonly PostService postService;
@@ -17,9 +18,11 @@ public class PostController : ControllerBase
 
 
     [HttpPost]
-    public PostDTO AddPost(PostDTO post)
+    [Authorize]
+    public PostDTO AddPost(CreatePostDTO post)
     {
         var newPost = postService.AddPost(post.Content);
+
         return new PostDTO
         {
             Id = newPost.Id,
@@ -27,10 +30,10 @@ public class PostController : ControllerBase
         };
     }
 
-    [HttpGet]
-    public PostDTO GetPost(string postId)
+    [HttpGet("{id}")]
+    public PostDTO GetPost(string id)
     {
-        var post = postService.GetPostById(postId);
+        var post = postService.GetPostById(id);
 
         return new PostDTO
         {
@@ -39,10 +42,11 @@ public class PostController : ControllerBase
         };
     }
 
-    [HttpDelete]
-    public void RemovePost(string postId)
+    [HttpDelete("{id}")]
+    [Authorize]
+    public void RemovePost(string id)
     {
-        postService.DeletePost(postId);
+        postService.DeletePost(id);
     }
 
 }
