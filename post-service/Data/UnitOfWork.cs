@@ -7,12 +7,15 @@ public class UnitOfWork : IUnitOfWork
     private readonly DatabaseContext context;
 
     public IPostRepository Posts { get; }
+    public IUserRepository Users { get; }
+
 
     public UnitOfWork(DatabaseContext context)
     {
         this.context = context;
 
         Posts = new PostRepository(context);
+        Users = new UserRepository(context);   
     }
 
     
