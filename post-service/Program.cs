@@ -16,8 +16,12 @@ builder.Services.AddCors();
 builder.Services.AddControllers();
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<IEventService, EventService>();
 
 builder.Services.AddTransient<PostService>();
+builder.Services.AddTransient<UserService>();
+
+builder.Services.AddHostedService<EventSubscriptionService>();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options
