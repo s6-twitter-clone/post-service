@@ -3,6 +3,7 @@ using post_service.Dtos;
 using post_service.Services;
 using post_service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace post_service.Controllers;
 
@@ -21,7 +22,9 @@ public class PostController : ControllerBase
     [Authorize]
     public PostDTO AddPost(CreatePostDTO post)
     {
-        var newPost = postService.AddPost(post.Content);
+        var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var newPost = postService.AddPost(userId, post.Content);
 
         return new PostDTO
         {
