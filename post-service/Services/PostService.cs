@@ -33,7 +33,7 @@ public class PostService
 
         if(user is null)
         {
-            throw new BadRequestException($"User with id '{userId}' doesn't exist");
+            throw new BadRequestException($"User with id '{userId}' doesn't exist.");
         }
 
         var post = new Post

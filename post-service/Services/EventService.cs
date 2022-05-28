@@ -26,7 +26,7 @@ public class EventService : IEventService, IDisposable
 
     public void Publish<T>(string topic, T data)
     {
-        var channel = connection.CreateModel();
+        using var channel = connection.CreateModel();
 
         channel.QueueDeclare(topic, exclusive: false, autoDelete: false);
         
