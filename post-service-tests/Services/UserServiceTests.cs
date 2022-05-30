@@ -27,6 +27,7 @@ public class UserServiceTests
     [Fact]
     public void GetById_Success()
     {
+        // Arrange
         var userService = new UserService(unitOfWork.Object);
 
         var user = new User
@@ -37,8 +38,10 @@ public class UserServiceTests
 
         unitOfWork.Setup(x => x.Users.GetById(user.Id)).Returns(user);
 
+        // Act
         var result = userService.GetById(user.Id);
 
+        // Assert
         unitOfWork.Verify(x => x.Users.GetById(user.Id), Times.Once);
 
         Assert.Equal(user, result);
@@ -47,29 +50,29 @@ public class UserServiceTests
     [Fact]
     public void GetById_NotFound()
     {
+        // Arrange
         var userService = new UserService(unitOfWork.Object);
 
-        var user = new User
-        {
-            Id = "test-id",
-            DisplayName = "name",
-        };
+        var userId = "test-id";
 
-        unitOfWork.Setup(x => x.Users.GetById(user.Id)).Returns(null as User);
+        unitOfWork.Setup(x => x.Users.GetById(userId)).Returns(null as User);
 
+        // Act
         var result = Assert.Throws<NotFoundException>(() =>
-            userService.GetById(user.Id)
+            userService.GetById(userId)
         );
 
-        unitOfWork.Verify(x => x.Users.GetById(user.Id), Times.Once);
+        // Assert
+        unitOfWork.Verify(x => x.Users.GetById(userId), Times.Once);
 
-        Assert.Equal($"User with id '{user.Id}' doesn't exist.", result.Message);
+        Assert.Equal($"User with id '{userId}' doesn't exist.", result.Message);
     }
 
 
     [Fact]
     public void Add_Success()
     {
+        // Arrange
         var userService = new UserService(unitOfWork.Object);
 
         var user = new User
@@ -80,12 +83,17 @@ public class UserServiceTests
 
         unitOfWork.Setup(x => x.Commit()).Returns(1);
 
-        var result = userService.Add(user.Id, user.DisplayName);    
+        // Act
+        var result = userService.Add(user.Id, user.DisplayName);
+
+        // Assert
+        unitOfWork.Verify(x => x.Commit(), Times.Once);
     }
 
     [Fact]
     public void Add_CouldNotAdd()
     {
+        // Arrange
         var userService = new UserService(unitOfWork.Object);
 
         var user = new User
@@ -94,9 +102,13 @@ public class UserServiceTests
             DisplayName = "name",
         };
 
+        // Act
         var result = Assert.Throws<InternalServerErrorException>(() =>
             userService.Add(user.Id, user.DisplayName)
         );
+
+        // Assert
+        unitOfWork.Verify(x => x.Commit(), Times.Once);
 
         Assert.Equal($"User with id '{user.Id}' could not be added.", result.Message);
     }
@@ -104,6 +116,7 @@ public class UserServiceTests
     [Fact]
     public void Update_Success()
     {
+        // Arrange
         var userService = new UserService(unitOfWork.Object);
 
         var user = new User
@@ -121,8 +134,10 @@ public class UserServiceTests
         unitOfWork.Setup(x => x.Commit()).Returns(1);
         unitOfWork.Setup(x => x.Users.GetById(user.Id)).Returns(user);
 
-        var result = userService.Update(user.Id, newUser.DisplayName);
+        // Act
+        var result = userService.Update(newUser.Id, newUser.DisplayName);
 
+        // Assert
         unitOfWork.Verify(x => x.Users.GetById(user.Id), Times.Once);
         unitOfWork.Verify(x => x.Commit(), Times.Once);
 
@@ -132,6 +147,7 @@ public class UserServiceTests
     [Fact]
     public void Update_NotFound()
     {
+        // Arrange
         var userService = new UserService(unitOfWork.Object);
 
         var newUser = new User
@@ -143,10 +159,12 @@ public class UserServiceTests
         unitOfWork.Setup(x => x.Commit()).Returns(1);
         unitOfWork.Setup(x => x.Users.GetById(newUser.Id)).Returns(null as User);
 
+        // Act
         var result = Assert.Throws<NotFoundException>(() => 
             userService.Update(newUser.Id, newUser.DisplayName)
         );
 
+        // Assert
         unitOfWork.Verify(x => x.Users.GetById(newUser.Id), Times.Once);
         unitOfWork.Verify(x => x.Commit(), Times.Never);
 
@@ -156,6 +174,7 @@ public class UserServiceTests
     [Fact]
     public void Update_CouldNotUpdate()
     {
+        // Arrange
         var userService = new UserService(unitOfWork.Object);
 
         var user = new User
@@ -172,10 +191,12 @@ public class UserServiceTests
 
         unitOfWork.Setup(x => x.Users.GetById(user.Id)).Returns(user);
 
+        // Act
         var result = Assert.Throws<InternalServerErrorException>(() =>
             userService.Update(newUser.Id, newUser.DisplayName)
         );
 
+        // Assert
         unitOfWork.Verify(x => x.Users.GetById(user.Id), Times.Once);
         unitOfWork.Verify(x => x.Commit(), Times.Once);
 
