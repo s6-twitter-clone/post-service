@@ -72,9 +72,14 @@ public class PostService
         return post;
     }
 
-    public void DeletePost(string id)
+    public void DeletePost(string id, string userId)
     {
         var post = GetPostById(id);
+
+        if(post.UserId != userId)
+        {
+            throw new ForbiddenException($"User with id '{userId}' is not authorized to delete post with id {id}.");
+        }
 
         unitOfWork.Posts.Remove(post);
 

@@ -49,7 +49,9 @@ public class PostController : ControllerBase
     [Authorize]
     public void RemovePost(string id)
     {
-        postService.DeletePost(id);
+        var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        postService.DeletePost(id, userId);
     }
 
 }
