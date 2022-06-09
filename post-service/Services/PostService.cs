@@ -47,7 +47,7 @@ public class PostService
 
         unitOfWork.Posts.Add(post);
 
-        eventService.Publish("post-added", new AddPostEvent
+        eventService.Publish(exchange: "post-exchange", topic: "post-added", new AddPostEvent
         {
             Id = post.Id,
             Content = post.Content,
@@ -83,7 +83,7 @@ public class PostService
 
         unitOfWork.Posts.Remove(post);
 
-        eventService.Publish("post-deleted", id);
+        eventService.Publish(exchange: "post-exchange", topic: "post-deleted", id);
 
         unitOfWork.Commit();
     }

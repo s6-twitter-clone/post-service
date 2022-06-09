@@ -17,8 +17,13 @@ public class EventSubscriptionService: BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        eventService.subscribe<AddUserEvent>("user-added", onUserAdded);
-        eventService.subscribe<UpdateUserEvent>("user-updated", onUserUpdated);
+        eventService.subscribe<AddUserEvent>(
+            exchange: "user-exchange", queue: "user-added-post", topic: "user-added", onUserAdded
+        );
+
+        eventService.subscribe<UpdateUserEvent>(
+            exchange: "user-exchange", queue: "user-updated-post", topic: "user-updated", onUserUpdated
+        );
 
         return Task.CompletedTask;
     }

@@ -6,7 +6,7 @@ When a post is created, deleted or otherwise updated the post service is in char
 ## build instructions
 There are two main ways to build and deploy the application.
 For local development docker compose is used to run the containers for the service and the database.
-For prouction kubernetes is used. Below there are instructions for both environments.
+For production kubernetes is used. Below there are instructions for both environments.
 
 ### Local development
 To build and run the project locally you can run `docker compose up`.
@@ -14,19 +14,19 @@ This will build the API and run all the services necessary for it to function pr
 
 ### Production
 To get the project running in kubernetes there are a couple of steps:
-- build the image for the backend by running 
+1. build the image for the backend by running 
 
 ```bash
 $ docker build -f post-service/Dockerfile -t <HOST>/post-service:<TAG>
 ```
 
-- Push the image to the docker registry by running 
+2. Push the image to the docker registry by running 
 
 ```bash
 $ docker push <HOST>/post-service:<TAG>
 ```
 
-- add the service and the database to kubernetes by running 
+3. add the service and the database to kubernetes by running 
 ```bash
 $ kubectl apply -f api.yaml -f db.yaml
 ```

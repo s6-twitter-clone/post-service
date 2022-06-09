@@ -1,12 +1,11 @@
 ﻿using post_service.Interfaces;
 using post_service.Models;
 
-namespace post_service.Data
+namespace post_service.Data;
+
+public class UserRepository: GenericRepository<User>, IUserRepository
 {
-    public class UserRepository: GenericRepository<User>, IUserRepository
+    public UserRepository(DatabaseContext context): base(context)
     {
-        public UserRepository(DatabaseContext context): base(context)
-        {
-        }
     }
 }

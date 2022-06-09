@@ -63,13 +63,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
     o.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateAudience = true,
         ValidAudience = builder.Configuration["Jwt:Audience"],
-
-        ValidateIssuer = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
 
-        ValidateLifetime = true
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
     };
 
 });
