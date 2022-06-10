@@ -1,0 +1,69 @@
+# deployment
+#
+# set up a deployment for the user API.
+
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "twidditcluster-b224"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "twidditcluster-b224"
+  template:
+    metadata:
+      labels:
+        app: "twidditcluster-b224"
+    spec:
+      containers:
+        - name: "twidditcluster-b224"
+          image: "twiddit.azurecr.io/twidditcluster"
+          ports:
+          - containerPort: 80
+
+---
+# service
+
+apiVersion: v1
+kind: Service
+metadata:
+    name: "twidditcluster-b224"
+    labels:
+        app: "twidditcluster-b224"
+spec:
+    type: ClusterIP
+    ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+    selector:
+        app: "twidditcluster-b224"
+
+---
+# ingress
+#
+# Sets up an ingress to route traffic to the user service
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: "twidditcluster-b224"
+    labels:
+        app: "twidditcluster-b224"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+        ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+    rules:
+        - host: twiddit.bdc33b62f0d9413db518.uksouth.aksapp.io
+          http:
+            paths:
+            - path: /api/posts
+              backend:
+                service:
+                  name: "twidditcluster-b224"
+                  port:
+                    number: 80
