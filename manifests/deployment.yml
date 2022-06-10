@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "twidditcluster-b224"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "twidditcluster-b224"
+  template:
+    metadata:
+      labels:
+        app: "twidditcluster-b224"
+    spec:
+      containers:
+        - name: "twidditcluster-b224"
+          image: "twiddit.azurecr.io/twidditcluster"
+          ports:
+          - containerPort: 80
