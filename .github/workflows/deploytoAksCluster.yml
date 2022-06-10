@@ -42,7 +42,7 @@ jobs:
       with:
         namespace: default
         manifests: |
-          manifests/post-service.yml
+          manifests/post-service.yaml
           manifests/db.yaml
           manifests/rabbitmq.yaml
         images: |
