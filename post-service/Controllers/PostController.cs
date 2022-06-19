@@ -34,6 +34,7 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public PostDTO GetPost(string id)
     {
         var post = postService.GetPostById(id);

@@ -43,7 +43,7 @@ jobs:
         namespace: default
         manifests: |
           manifests/post-service.yaml
-          manifests/db.yaml
+          manifests/post-db.yaml
           manifests/rabbitmq.yaml
         images: |
           twiddit.azurecr.io/twidditcluster:${{ github.sha }}
