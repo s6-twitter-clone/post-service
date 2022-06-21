@@ -42,7 +42,12 @@ public class PostController : ControllerBase
         return new PostDTO
         {
             Id = post.Id,
-            Content = post.Content
+            Content = post.Content,
+            User = new UserDTO
+            {
+                Id = post.User.Id,
+                DisplayName = post.User.DisplayName
+            }
         };
     }
 
