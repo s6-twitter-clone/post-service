@@ -9,6 +9,10 @@ using post_service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddHealthChecks();
+
+
 // Add services to the container.
 builder.Services.AddCors();
 
@@ -124,6 +128,8 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+app.MapHealthChecks("/healthz");
 
 app.UseAuthentication();
 app.UseAuthorization();
