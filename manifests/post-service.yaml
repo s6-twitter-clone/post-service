@@ -5,20 +5,20 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: "twidditcluster-b224"
+  name: "twiddit-8098"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: "twidditcluster-b224"
+      app: "twiddit-8098"
   template:
     metadata:
       labels:
-        app: "twidditcluster-b224"
+        app: "twiddit-8098"
     spec:
       containers:
-        - name: "twidditcluster-b224"
-          image: "twiddit.azurecr.io/twidditcluster"
+        - name: "twiddit-8098"
+          image: "twiddit2.azurecr.io/twiddit"
           ports:
           - containerPort: 80
 
@@ -28,9 +28,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: "twidditcluster-b224"
+    name: "twiddit-8098"
     labels:
-        app: "twidditcluster-b224"
+        app: "twiddit-8098"
 spec:
     type: ClusterIP
     ports:
@@ -39,7 +39,7 @@ spec:
       protocol: TCP
       name: http
     selector:
-        app: "twidditcluster-b224"
+        app: "twiddit-8098"
 
 ---
 # ingress
@@ -49,22 +49,21 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: "twidditcluster-b224"
+    name: "twiddit-8098"
     labels:
-        app: "twidditcluster-b224"
+        app: "twiddit-8098"
     annotations:
         kubernetes.io/ingress.class: addon-http-application-routing
-        ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
     rules:
-        - host: twiddit.bdc33b62f0d9413db518.uksouth.aksapp.io
+        - host: twiddit.5fd06ac12e634d9096be.uksouth.aksapp.io
           http:
             paths:
             - path: /api/posts
               pathType: Prefix
               backend:
                 service:
-                  name: "twidditcluster-b224"
+                  name: "twiddit-8098"
                   port:
                     number: 80
