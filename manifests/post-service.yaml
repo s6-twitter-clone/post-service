@@ -65,7 +65,7 @@ spec:
     rules:
     - http:
         paths:
-        - path: /api/posts
+        - path: /api/posts/*
           pathType: Prefix
           backend:
             service:
