@@ -72,3 +72,10 @@ spec:
                 name: "twiddit-8098"
                 port:
                   number: 80
+        - path: /api/posts
+          pathType: Prefix
+          backend:
+            service:
+                name: "twiddit-8098"
+                port:
+                  number: 80
