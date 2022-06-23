@@ -18,6 +18,25 @@ public class PostController : ControllerBase
     }
 
 
+    [HttpGet]
+    public IEnumerable<PostDTO> GetPosts([FromQuery] string userId, [FromQuery] int offset = 0, [FromQuery] int count = 5)
+    {
+        var posts = postService.GetPosts(userId, count, offset);
+
+        return posts.Select(post => new PostDTO
+        {
+            Id = post.Id,
+            Content = post.Content,
+            User = new UserDTO
+            {
+                Id = post.User.Id,
+                DisplayName = post.User.DisplayName
+            }
+        });
+    }
+
+
+
     [HttpPost]
     [Authorize]
     public PostDTO AddPost(CreatePostDTO post)
@@ -34,7 +53,6 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
     public PostDTO GetPost(string id)
     {
         var post = postService.GetPostById(id);

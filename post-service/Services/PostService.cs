@@ -16,6 +16,30 @@ public class PostService
         this.eventService = eventService;
     }
 
+    public IEnumerable<Post> GetPosts(string userId, int count, int offset)
+    {
+        if(offset < 0)
+        {
+            throw new BadRequestException("Post offset must be positive");
+        }
+
+        if(count <= 0 || count > 10)
+        {
+            throw new BadRequestException("Post count must be between 1 and 10");
+        }
+
+        var user = unitOfWork.Users.GetById(userId);
+
+        if (user is null)
+        {
+            throw new BadRequestException($"User with id '{userId}' doesn't exist.");
+        }
+
+
+
+        return unitOfWork.Posts.GetAll().Where(x => x.UserId == userId).Skip(offset).Take(count);
+    }
+
     public Post AddPost(string userId, string content)
     {
 
